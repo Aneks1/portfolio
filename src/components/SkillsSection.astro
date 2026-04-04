@@ -1,0 +1,90 @@
+---
+const {
+  title = 'Skills',
+  description = '',
+  categories = [],
+} = Astro.props;
+---
+
+<section class="section" id="skills">
+  <div class="section-header">
+    <h2>{title}</h2>
+    {description && <p>{description}</p>}
+  </div>
+  <div class="skills-grid">
+    {categories.map((category) => (
+      <div class="skill-card">
+        <h3>{category.title}</h3>
+        <ul>
+          {category.items.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 4rem 0;
+  }
+
+  .section-header {
+    max-width: 640px;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 2rem;
+    color: #f3f2ff;
+  }
+
+  .section-header p {
+    margin-top: 0.75rem;
+    color: #cfcbe9;
+    font-size: 1.05rem;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+    background: rgba(34, 36, 58, 0.85);
+    color: #e8e6ff;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .skill-card h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.2rem;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: #cbc7e8;
+  }
+
+  li + li {
+    margin-top: 0.35rem;
+  }
+
+  @media (max-width: 640px) {
+    h2 {
+      font-size: 1.7rem;
+    }
+
+    .section-header p {
+      font-size: 0.95rem;
+    }
+  }
+</style>

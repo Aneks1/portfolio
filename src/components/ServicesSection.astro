@@ -1,0 +1,99 @@
+---
+const {
+  title = 'Services',
+  description = '',
+  services = [],
+} = Astro.props;
+---
+
+<section class="section" id="services">
+  <div class="section-header">
+    <h2>{title}</h2>
+    {description && <p>{description}</p>}
+  </div>
+  <div class="services-grid">
+    {services.map((service) => (
+      <article class="service-card">
+        <h3>{service.title}</h3>
+        <p>{service.description}</p>
+        {service.highlights && (
+          <ul>
+            {service.highlights.map((highlight) => (
+              <li>{highlight}</li>
+            ))}
+          </ul>
+        )}
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 4rem 0;
+  }
+
+  .section-header {
+    max-width: 640px;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 2rem;
+    color: #f3f2ff;
+  }
+
+  .section-header p {
+    margin-top: 0.75rem;
+    color: #cfcbe9;
+    font-size: 1.05rem;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .service-card {
+    padding: 1.75rem;
+    border-radius: 16px;
+    background: rgba(19, 21, 34, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ebeafd;
+  }
+
+  .service-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+  }
+
+  .service-card p {
+    margin: 0 0 0.75rem;
+    color: #c3c0de;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: #d2ceef;
+  }
+
+  li + li {
+    margin-top: 0.35rem;
+  }
+
+  @media (max-width: 640px) {
+    h2 {
+      font-size: 1.7rem;
+    }
+
+    .section-header p {
+      font-size: 0.95rem;
+    }
+  }
+</style>

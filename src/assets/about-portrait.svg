@@ -1,0 +1,21 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Abstract portrait">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09090f" />
+      <stop offset="100%" stop-color="#161622" />
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#944fff" stop-opacity="0.65" />
+      <stop offset="100%" stop-color="#944fff" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="shape" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#44f3ff" />
+      <stop offset="100%" stop-color="#944fff" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#bg)" />
+  <rect width="1200" height="1200" fill="url(#halo)" />
+  <circle cx="600" cy="420" r="250" fill="#22233a" stroke="#44f3ff" stroke-width="20" />
+  <path d="M320 1030C360 820 500 720 600 720C700 720 840 820 880 1030" fill="#1b1c2e" stroke="url(#shape)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M450 470C470 520 530 560 600 560C670 560 730 520 750 470" fill="#26263d" stroke="#44f3ff" stroke-opacity="0.6" stroke-width="12" />
+</svg>

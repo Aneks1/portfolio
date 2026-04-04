@@ -9,6 +9,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.14.1"
+    "@astrojs/vue": "^5.1.1",
+    "astro": "^5.14.1",
+    "particulab": "^2.1.4",
+    "vue": "^3.5.22"
   }
 }

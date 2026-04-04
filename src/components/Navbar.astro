@@ -1,0 +1,81 @@
+﻿---
+import logo from '../assets/logo.png';
+const { links = [] } = Astro.props;
+---
+
+<nav class="navbar">
+  <div class="brand">
+    <img src={logo.src} alt="Site logo" class="brand-logo" loading="lazy" />
+  </div>
+  <ul class="nav-links">
+    {links.map((link: any) => (
+      <li><a href={link.href}>{link.label}</a></li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .navbar {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    color: #f5f5f5;
+    top: 0;
+    left: 0;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+  }
+
+  .brand-logo {
+    height: 2.25rem;
+    width: auto;
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, var(--main-color-1), var(--main-color-2));
+    background-clip: text;
+  }
+
+  .nav-links a {
+    display: inline-block;
+    color: transparent;
+    text-decoration: none;
+    font-size: 1rem;
+    letter-spacing: 0.025em;
+    font-weight: 700;
+  }
+
+  .nav-links a:hover,
+  .nav-links a:focus {
+    transition: transform 150ms ease-out;
+    transform: translateY(-3px);
+    color: #abb2ff;
+  }
+
+  @media (max-width: 720px) {
+    .navbar {
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 1rem;
+      position: static;
+      top: auto;
+      left: auto;
+    }
+
+    .nav-links {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+</style>

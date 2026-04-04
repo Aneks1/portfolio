@@ -1,0 +1,88 @@
+---
+const {
+  title = 'Contact',
+  description = '',
+  contacts = [],
+} = Astro.props;
+---
+
+<section class="section" id="contact">
+  <div class="section-header">
+    <h2>{title}</h2>
+    {description && <p>{description}</p>}
+  </div>
+  <div class="contact-grid">
+    {contacts.map((item) => (
+      <a class="contact-card" href={item.href} target={item.external ? '_blank' : undefined} rel={item.external ? 'noopener noreferrer' : undefined}>
+        <span class="label">{item.label}</span>
+        <span class="value">{item.value}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 4rem 0;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 2rem;
+    color: #f3f2ff;
+  }
+
+  .section-header p {
+    margin-top: 0.75rem;
+    color: #cbc7e8;
+    font-size: 1.05rem;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .contact-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 14px;
+    background: rgba(19, 21, 34, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #f0efff;
+    text-decoration: none;
+  }
+
+  .label {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #9e97c6;
+  }
+
+  .value {
+    font-size: 1.05rem;
+  }
+
+  .contact-card:hover,
+  .contact-card:focus {
+    border-color: rgba(141, 224, 244, 0.8);
+    color: #8de0f4;
+  }
+
+  @media (max-width: 640px) {
+    h2 {
+      font-size: 1.7rem;
+    }
+
+    .section-header p {
+      font-size: 0.95rem;
+    }
+  }
+</style>

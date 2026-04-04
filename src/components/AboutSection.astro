@@ -1,0 +1,179 @@
+---
+const {
+  paragraphs = [],
+  imageAlt = 'Portrait of Gonzalo Ames',
+} = Astro.props;
+
+const defaultAboutText = `I am Gonzalo, better known on the internet as Aneks. I am a Peruvian developer skilled in both front-end and back-end development. I started coding in 2020 creating Roblox games, and in 2021 I moved into JavaScript while building Discord bots. Since then, I have been refining my skills in TypeScript and modern web development, with Vue as my main (and favorite) framework.
+
+Alongside development, I am also a composer, creating original music ranging from ambient and cinematic pieces to guitar-driven tracks. This dual perspective allows me to build experiences that are not only functional, but also expressive and immersive.`;
+
+const textBlocks = (paragraphs.length ? paragraphs.join('\n\n') : defaultAboutText)
+  .split(/\n\s*\n/)
+  .map((block) => block.trim())
+  .filter(Boolean);
+---
+
+<section class="about-section" id="about">
+  <div class="about-wrapper">
+    <div class="about-info">
+      <canvas class="about-particles" aria-hidden="true" data-about-particles></canvas>
+      <span class="about-label">about me</span>
+      <h2 class="about-title">Learn more about who I am and what I do</h2>
+      <div class="about-copy">
+        {textBlocks.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-section {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .about-wrapper {
+    width: min(640px, 82vw);
+    margin: 0 auto;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .about-info {
+    position: relative;
+    width: 100%;
+    padding: clamp(2.5rem, 6vw, 4.5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(148, 71, 255, 0.25), transparent 60%),
+      radial-gradient(circle at 85% 82%, rgba(68, 243, 255, 0.25), transparent 60%),
+      rgba(7, 6, 13, 0.92);
+    text-align: center;
+    min-height: 100%;
+  }
+
+  .about-particles {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.45;
+    mix-blend-mode: screen;
+    z-index: -1;
+  }
+
+  .about-label {
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    font-size: 1rem;
+    font-weight: 500;
+    background-image: linear-gradient(to right, var(--main-color-1), var(--main-color-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .about-title {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .about-copy p {
+    margin: 0 0 1.5rem;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+  }
+
+  .about-copy p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 960px) {
+    .about-info {
+      padding: clamp(2rem, 7vw, 3rem);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .about-label {
+      letter-spacing: 0.3em;
+    }
+
+    .about-copy p {
+      font-size: clamp(1.2rem, 6vw, 1.4rem);
+    }
+  }
+</style>
+
+<script type="module">
+  import { HEX, ParticleSystem, range } from 'particulab';
+
+  (() => {
+    const initParticles = () => {
+      const canvas = document.querySelector('[data-about-particles]');
+      if (!canvas)  return console.log("no particle system");
+
+      const buildSystem = () => {
+        const rect = canvas.getBoundingClientRect();
+        const scale = window.devicePixelRatio || 1;
+        const width = Math.max(1, rect.width * scale);
+        const height = Math.max(1, rect.height * scale);
+        canvas.width = width;
+        canvas.height = height;
+        return new ParticleSystem(canvas, {
+          canvasSize: { x: width, y: height },
+          amount: 120,
+          lifeSpan: range(160, 320),
+          size: range(2, 4),
+          velocity: { x: range(-20, 20), y: range(-14, 14) },
+          colors: [new HEX('944fff'), new HEX('44f3ff')],
+          opacity: range(30, 65),
+          shapes: ['circle'],
+        });
+      };
+
+      let system = buildSystem();
+      system.init();
+
+      let resizeFrame;
+      const observer = new ResizeObserver(() => {
+        cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(() => {
+          system?.stop();
+          system?.clear();
+          system = buildSystem();
+          system.init();
+        });
+      });
+
+      observer.observe(canvas);
+
+      const cleanup = () => {
+        observer.disconnect();
+        cancelAnimationFrame(resizeFrame);
+        system?.stop();
+        system?.clear();
+      };
+
+      window.addEventListener('beforeunload', cleanup, { once: true });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initParticles, { once: true });
+    } else {
+      initParticles();
+    }
+  })();
+</script>

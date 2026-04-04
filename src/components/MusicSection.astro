@@ -1,0 +1,229 @@
+---
+import MusicPlayer from './MusicPlayer.vue';
+import MusicCard from './MusicCard.vue';
+
+const {
+  title = 'Music',
+  description = '',
+  tracks = [],
+} = Astro.props;
+---
+
+<section class="section" id="music">
+  <div class="section-header">
+    <h2>{title}</h2>
+    {description && <p>{description}</p>}
+  </div>
+  <div class="music-carousel" data-carousel>
+    <button
+      type="button"
+      class="music-carousel__nav"
+      aria-label="Scroll to previous tracks"
+      data-carousel-prev
+      disabled
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor" />
+      </svg>
+    </button>
+    <div class="music-carousel__viewport" data-carousel-viewport>
+      {tracks.map((track) => (
+        <MusicCard client:load track={track} />
+      ))}
+    </div>
+    <button
+      type="button"
+      class="music-carousel__nav"
+      aria-label="Scroll to next tracks"
+      data-carousel-next
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z" fill="currentColor" />
+      </svg>
+    </button>
+  </div>
+  <MusicPlayer client:load playlist={tracks} />
+</section>
+
+<style>
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 5rem 0;
+    position: relative;
+    align-items: center;
+    background: radial-gradient(
+      circle 1200px at 50% 30%,
+      rgba(106, 72, 255, 0.1) 0%,
+      rgba(106, 72, 255, 0) 50%
+    );
+    background-repeat: no-repeat;
+    background-position: center top;
+  }
+
+  .section::before {
+    content: "";
+    width: 90%;
+    height: 2px;
+    position: absolute;
+    background: linear-gradient(to right, transparent, var(--main-color-1), var(--main-color-2), transparent);
+    top: 0;
+    left: 50%;
+    translate: -50% 0;
+    opacity: 65%;
+  }
+
+  .section-header {
+    max-width: 640px;
+  }
+
+  h2 {
+    margin: 0;
+    text-align: center;
+    font-size: 3rem;
+    color: #ffffffe0;
+  }
+
+  .section-header p {
+    color: #ffffff80;
+    text-align: center;
+    font-size: 1.25rem;
+  }
+
+  @media (max-width: 640px) {
+    h2 {
+      font-size: 2.4rem;
+    }
+
+    .section-header p {
+      font-size: 1.05rem;
+    }
+  }
+
+  .music-carousel {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+  }
+
+  .music-carousel__viewport {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    padding: 0.5rem 0;
+  }
+
+  .music-carousel__viewport::-webkit-scrollbar {
+    height: 0px;
+  }
+
+  .music-carousel__nav {
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(25, 25, 25, 0.7);
+    color: #f4f3ff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease;
+  }
+
+  .music-carousel__nav svg {
+    width: 22px;
+    height: 22px;
+    opacity: 0.5;
+  }
+
+  .music-carousel__nav:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    .music-carousel {
+      grid-template-columns: 1fr;
+      padding: 0 2.75rem;
+    }
+
+    .music-carousel__nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 42px;
+      height: 42px;
+    }
+
+    .music-carousel__nav[data-carousel-prev] {
+      left: 0.5rem;
+    }
+
+    .music-carousel__nav[data-carousel-next] {
+      right: 0.5rem;
+    }
+
+    .music-carousel__viewport {
+      order: 0;
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .music-carousel {
+      padding: 0 1.25rem;
+    }
+
+    .music-carousel__nav {
+      display: none;
+    }
+
+    .music-carousel__viewport {
+      gap: 0.75rem;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const activate = () => {
+      document.querySelectorAll('[data-carousel]').forEach((carousel) => {
+        const viewport = carousel.querySelector('[data-carousel-viewport]');
+        const prev = carousel.querySelector('[data-carousel-prev]');
+        const next = carousel.querySelector('[data-carousel-next]');
+        if (!viewport) return;
+
+        const scrollAmount = () => viewport.clientWidth * 0.8;
+        const updateButtons = () => {
+          const maxScroll = viewport.scrollWidth - viewport.clientWidth - 2;
+          const offset = viewport.scrollLeft;
+          if (prev) prev.disabled = offset <= 0;
+          if (next) next.disabled = offset >= maxScroll;
+        };
+
+        prev?.addEventListener('click', () => {
+          viewport.scrollBy({ left: scrollAmount() * -1, behavior: 'smooth' });
+        });
+
+        next?.addEventListener('click', () => {
+          viewport.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+        });
+
+        viewport.addEventListener('scroll', updateButtons, { passive: true });
+        updateButtons();
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', activate, { once: true });
+    } else {
+      activate();
+    }
+  })();
+</script>

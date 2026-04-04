@@ -1,0 +1,101 @@
+---
+import ProjectCard from './ProjectCard.astro';
+
+const { title = 'Projects', description = '', projects = [] } = Astro.props;
+---
+
+<section class="section" id="projects">
+  <div class="section-header">
+    <h2>{title}</h2>
+    {description && <p>{description}</p>}
+  </div>
+  <div class="grid">
+    <!-- {projects.map((project: any) => (
+      <ProjectCard {...project} />
+    ))} -->
+    <div class="nothing">
+      Nothing here yet :(
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 5rem 0;
+    position: relative;
+    align-items: center;
+    background: radial-gradient(
+      circle 1200px at 50% 30%,
+      rgba(106, 72, 255, 0.1) 0%,
+      rgba(106, 72, 255, 0) 50%
+    );
+    background-repeat: no-repeat;
+    background-position: center top;
+  }
+
+  .section::before {
+    content: "";
+    width: 90%;
+    height: 2px;
+    position: absolute;
+    background: linear-gradient(to right, transparent, var(--main-color-1), var(--main-color-2), transparent);
+    top: 0;
+    left: 50%;
+    translate: -50% 0;
+    opacity: 65%;
+  }
+
+  .section-header {
+    max-width: 640px;
+  }
+
+  h2 {
+    margin: 0;
+    text-align: center;
+    font-size: 3rem;
+    color: #ffffffe0;
+  }
+
+  .section-header p {
+    color: #ffffff80;
+    text-align: center;
+    font-size: 1.25rem;
+  }
+
+  @media (max-width: 640px) {
+    h2 {
+      font-size: 2.4rem;
+    }
+
+    .section-header p {
+      font-size: 1.05rem;
+    }
+  }
+
+  .grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .nothing {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: min(100%, 21rem);
+    min-height: clamp(16rem, 55vw, 30rem);
+    padding: 2.5rem 1.75rem;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.25);
+    font-size: clamp(1.25rem, 6vw, 2rem);
+    text-align: center;
+    font-weight: 500;
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.25);
+  }
+</style>
