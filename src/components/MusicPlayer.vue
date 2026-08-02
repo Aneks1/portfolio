@@ -3,6 +3,47 @@
     class="player"
     :class="{ 'player--inactive': !currentTrack, 'player--hidden': !hasScrolled }"
   >
+    <Transition name="album-queue" appear>
+      <aside
+        v-if="currentTrack && activePlaylist.length"
+        class="album-queue"
+        :class="{ 'album-queue--collapsed': isQueueCollapsed }"
+      >
+        <button
+          type="button"
+          class="album-queue__toggle"
+          :aria-expanded="!isQueueCollapsed"
+          @click="isQueueCollapsed = !isQueueCollapsed"
+        >
+          <span>
+            <small>Playing album</small>
+            <strong>{{ currentTrack.albumTitle ?? 'Track list' }}</strong>
+          </span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m7.41 8.59 4.59 4.58 4.59-4.58L18 10l-6 6-6-6z" fill="currentColor" />
+          </svg>
+        </button>
+
+        <div class="album-queue__body">
+          <ol class="album-queue__tracks">
+            <li v-for="(track, index) in activePlaylist" :key="track.id">
+              <button
+                type="button"
+                class="album-queue__track"
+                :class="{ 'album-queue__track--active': currentTrack.id === track.id }"
+                @click="loadTrack(track)"
+              >
+                <span class="album-queue__number">{{ String(index + 1).padStart(2, '0') }}</span>
+                <span class="album-queue__title">{{ track.title }}</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 5v14l11-7-11-7z" fill="currentColor" />
+                </svg>
+              </button>
+            </li>
+          </ol>
+        </div>
+      </aside>
+    </Transition>
     <div class="player__details">
       <div class="cover" v-if="currentTrack?.cover" :style="coverStyle"></div>
       <div class="meta" v-if="currentTrack">
@@ -103,6 +144,8 @@ type Track = {
   duration?: string;
   cover?: string;
   src: string;
+  albumId?: string;
+  albumTitle?: string;
 };
 
 const props = defineProps<{
@@ -116,6 +159,7 @@ const duration = ref(0);
 const currentTime = ref(0);
 const progress = ref(0);
 const hasScrolled = ref(false);
+const isQueueCollapsed = ref(false);
 
 function formatTime(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
@@ -139,13 +183,17 @@ const formattedDuration = computed(() => {
 });
 
 const playlist = computed(() => props.playlist ?? []);
+const activePlaylist = ref<Track[]>([]);
+const playbackQueue = computed(() =>
+  activePlaylist.value.length ? activePlaylist.value : playlist.value,
+);
 
 const currentIndex = computed(() => {
   if (!currentTrack.value) return -1;
-  return playlist.value.findIndex((item) => item.id === currentTrack.value?.id);
+  return playbackQueue.value.findIndex((item) => item.id === currentTrack.value?.id);
 });
 
-const canSkipNext = computed(() => playlist.value.length > 1 && currentIndex.value !== -1);
+const canSkipNext = computed(() => playbackQueue.value.length > 1 && currentIndex.value !== -1);
 
 const loadTrack = (track: Track) => {
   if (!audioEl.value) return;
@@ -176,30 +224,30 @@ const togglePlay = () => {
 };
 
 const playNext = () => {
-  if (!playlist.value.length) return;
+  if (!playbackQueue.value.length) return;
   if (!currentTrack.value) {
-    loadTrack(playlist.value[0]);
+    loadTrack(playbackQueue.value[0]);
     return;
   }
   const index = currentIndex.value;
   if (index === -1) return;
-  const nextIndex = (index + 1) % playlist.value.length;
-  if (playlist.value[nextIndex]) {
-    loadTrack(playlist.value[nextIndex]);
+  const nextIndex = (index + 1) % playbackQueue.value.length;
+  if (playbackQueue.value[nextIndex]) {
+    loadTrack(playbackQueue.value[nextIndex]);
   }
 };
 
 const playPrevious = () => {
   if (!audioEl.value || !currentTrack.value) return;
-  const hasPlaylist = playlist.value.length > 0 && currentIndex.value !== -1;
+  const hasPlaylist = playbackQueue.value.length > 0 && currentIndex.value !== -1;
   if (audioEl.value.currentTime > 3 || !hasPlaylist) {
     audioEl.value.currentTime = 0;
     currentTime.value = 0;
     progress.value = 0;
     return;
   }
-  const prevIndex = (currentIndex.value - 1 + playlist.value.length) % playlist.value.length;
-  const previousTrack = playlist.value[prevIndex];
+  const prevIndex = (currentIndex.value - 1 + playbackQueue.value.length) % playbackQueue.value.length;
+  const previousTrack = playbackQueue.value[prevIndex];
   if (previousTrack) {
     loadTrack(previousTrack);
   }
@@ -231,11 +279,19 @@ const handleEnded = () => {
 };
 
 const handleTrackRequest = (event: Event) => {
-  const detail = (event as CustomEvent<Track>).detail;
+  const detail = (event as CustomEvent<Track | { track: Track; playlist?: Track[] }>).detail;
   if (!detail) return;
-  const track = detail.src
-    ? detail
-    : playlist.value.find((item) => item.id === detail.id) ?? null;
+  const isAlbumRequest = 'track' in detail;
+  const requestedTrack = isAlbumRequest ? detail.track : detail;
+  if (isAlbumRequest && detail.playlist?.length) {
+    activePlaylist.value = detail.playlist;
+    isQueueCollapsed.value = false;
+  } else {
+    activePlaylist.value = [];
+  }
+  const track = requestedTrack.src
+    ? requestedTrack
+    : playbackQueue.value.find((item) => item.id === requestedTrack.id) ?? null;
   if (!track) return;
   loadTrack(track);
 };
@@ -285,16 +341,173 @@ onBeforeUnmount(() => {
   gap: 1.25rem 2rem;
   padding: 1rem 1.75rem;
   padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
-  background: rgba(15, 15, 15, 0.5);
-  backdrop-filter: blur(30px);
+  background: transparent;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   color: #f2f1ff;
   width: 100%;
   transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
 }
 
+.player::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background-color: rgba(15, 15, 15, 0.5);
+  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(30px);
+}
+
 .player audio {
   grid-column: 1 / -1;
+}
+
+.album-queue {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 1.75rem;
+  width: min(360px, calc(100vw - 3.5rem));
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  background-color: rgba(15, 15, 15, 0.5);
+  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(30px);
+  isolation: isolate;
+}
+
+.album-queue-enter-active,
+.album-queue-leave-active {
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.album-queue-enter-from,
+.album-queue-leave-to {
+  opacity: 0;
+  transform: translateY(14px) scale(0.97);
+}
+
+.album-queue::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 34px;
+  width: 14px;
+  height: 14px;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 15, 15, 0.72);
+  transform: rotate(45deg);
+}
+
+.album-queue__toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.35rem 1.4rem 1.2rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.album-queue__toggle span {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.album-queue__toggle small {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.album-queue__toggle strong {
+  overflow: hidden;
+  font-size: 1.05rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.album-queue__toggle svg {
+  flex: 0 0 auto;
+  width: 20px;
+  transition: transform 0.2s ease;
+}
+
+.album-queue--collapsed .album-queue__toggle svg {
+  transform: rotate(180deg);
+}
+
+.album-queue__body {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition: grid-template-rows 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+}
+
+.album-queue--collapsed .album-queue__body {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.album-queue__tracks {
+  display: grid;
+  min-height: 0;
+  overflow: hidden;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0 0.8rem 0.9rem;
+  list-style: none;
+}
+
+.album-queue__track {
+  display: grid;
+  width: 100%;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.72rem 0.75rem;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.68);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.album-queue__track:hover,
+.album-queue__track:focus-visible,
+.album-queue__track--active {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.album-queue__track--active {
+  color: var(--main-color-2);
+}
+
+.album-queue__number {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.album-queue__title {
+  overflow: hidden;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.album-queue__track svg {
+  width: 15px;
 }
 
 .player--hidden {
@@ -492,6 +705,11 @@ p {
 
   .player__details {
     justify-content: space-between;
+  }
+
+  .album-queue {
+    left: 1rem;
+    width: min(360px, calc(100vw - 2rem));
   }
 
   .player__spacer {

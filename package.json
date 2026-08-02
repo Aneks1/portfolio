@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.5",
     "@astrojs/vue": "^5.1.1",
     "astro": "^5.14.1",
     "particulab": "^2.1.4",

@@ -4,9 +4,9 @@ const {
   imageAlt = 'Portrait of Gonzalo Ames',
 } = Astro.props;
 
-const defaultAboutText = `I am Gonzalo, better known on the internet as Aneks. I am a Peruvian developer skilled in both front-end and back-end development. I started coding in 2020 creating Roblox games, and in 2021 I moved into JavaScript while building Discord bots. Since then, I have been refining my skills in TypeScript and modern web development, with Vue as my main (and favorite) framework.
+const defaultAboutText = `I am Gonzalo Ames, also known as Aneks, a Peruvian composer and music producer creating original music for games and visual stories.
 
-Alongside development, I am also a composer, creating original music ranging from ambient and cinematic pieces to guitar-driven tracks. This dual perspective allows me to build experiences that are not only functional, but also expressive and immersive.`;
+My work ranges from ambient and cinematic pieces to electronic textures and guitar-driven tracks, always led by melody, atmosphere, and narrative.`;
 
 const textBlocks = (paragraphs.length ? paragraphs.join('\n\n') : defaultAboutText)
   .split(/\n\s*\n/)
@@ -19,7 +19,7 @@ const textBlocks = (paragraphs.length ? paragraphs.join('\n\n') : defaultAboutTe
     <div class="about-info">
       <canvas class="about-particles" aria-hidden="true" data-about-particles></canvas>
       <span class="about-label">about me</span>
-      <h2 class="about-title">Learn more about who I am and what I do</h2>
+      <h2 class="about-title">Music that gives a world its voice</h2>
       <div class="about-copy">
         {textBlocks.map((paragraph) => (
           <p>{paragraph}</p>

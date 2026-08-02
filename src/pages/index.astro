@@ -1,60 +1,34 @@
 ﻿---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import ProjectsSection from '../components/ProjectsSection.astro';
 import MusicSection from '../components/MusicSection.astro';
-import SkillsSection from '../components/SkillsSection.astro';
 import ServicesSection from '../components/ServicesSection.astro';
-import AboutSection from '../components/AboutSection.astro';
 import ContactSection from '../components/ContactSection.astro';
 import Footer from '../components/Footer.astro';
 
 import {
   navLinks,
-  projectList,
-  musicTracks,
-  skillCategories,
+  musicAlbums,
   serviceList,
-  aboutContent,
-  contactEntries,
-  footerLinks,
 } from '../data/content';
 ---
 
 <Layout>
   <main class="page">
     <Hero links={navLinks} />
-    <ProjectsSection
-      title="Projects"
-      description="Take a look at what I have worked on. Here you can find my past jobs as well as my personal projects."
-      projects={projectList}
-    />
     <MusicSection
-      title="Music"
-      description="Fresh cuts, live edits, and compositions currently in rotation. Hit play to preview."
-      tracks={musicTracks}
+      title="Selected Music"
+      description="Original themes, cinematic cues, and experiments written for games and imagined worlds. Select an album to listen."
+      albums={musicAlbums}
     />
-    <!-- <SkillsSection
-      title="Core Skills"
-      description="Tools and disciplines I rely on to move ideas from sketch to launch."
-      categories={skillCategories}
-    /> -->
-    <!-- <ServicesSection
+    <ServicesSection
       title="Services"
-      description="Partner with me for end-to-end experiences or individual stages of your project."
+      description="Flexible music and audio packages shaped around the needs of your game."
       services={serviceList}
-    /> -->
-    <!-- <AboutSection {...aboutContent} /> -->
-    <!-- <ContactSection
-      title="Let's Collaborate"
-      description="Whether you need a project lead or a sonic collaborator, reach out."
-      contacts={contactEntries}
-    /> -->
+    />
+    <ContactSection />
   </main>
-  <Footer
-    copyright={`(c) ${new Date().getFullYear()} Gonzalo Ames`}
-    links={footerLinks}
-  />
+  <Footer copyright={`© ${new Date().getFullYear()} Gonzalo Ames`} />
 </Layout>
 
 <style>

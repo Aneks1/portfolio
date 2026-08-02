@@ -1,104 +1,96 @@
 export const navLinks = [
   { label: 'Home', href: '#home' },
-  { label: 'Projects', href: '#projects' },
   { label: 'Music', href: '#music' },
-  { label: 'Skills', href: '#skills' },
   { label: 'Services', href: '#services' },
-  { label: 'About', href: '#about' },
   { label: 'Contact', href: '#contact' },
 ];
 
 export const heroContent = {
-  highlights: ['Design Systems', 'Creative Development', 'Sound Designer'],
+  highlights: ['Composer', 'Music Producer', 'Sound Designer'],
   title: 'Gonzalo Ames',
-  subtitle: 'I help brands turn ideas into immersive digital and sonic experiences.',
+  subtitle: 'Original music for games, stories, and imagined worlds.',
   description:
-    'Front-of-house developer and music producer crafting cohesive stories across interfaces, animations, and soundscapes.',
-  primaryAction: { label: 'View Projects', href: '#projects' },
+    'A Peruvian composer creating expressive scores that move between cinematic atmosphere, intimate melody, and guitar-driven energy.',
+  primaryAction: { label: 'Listen to My Music', href: '#music' },
   secondaryAction: { label: 'Contact Me', href: '#contact' },
 };
 
-export const projectList = [
-  {
-    title: 'Aurora Visualizer',
-    description:
-      'Reactive audio visual platform that syncs lighting rigs with live performances using WebGL and MIDI.',
-    tags: ['Astro', 'Three.js', 'WebAudio'],
-    links: [
-      { label: 'Case Study', href: '#projects' },
-      { label: 'Live Demo', href: 'https://example.com/aurora' },
-    ],
-  },
-  {
-    title: 'Muse Studio',
-    description:
-      'Modular production suite website featuring themeable presets, sample management, and booking integration.',
-    tags: ['Vue', 'Tailwind', 'Supabase'],
-    links: [
-      { label: 'GitHub', href: 'https://github.com/placeholder/muse-studio' },
-    ],
-  },
-  {
-    title: 'Echo Trails',
-    description:
-      'Location-based sound tour app delivering generative ambience and stories for urban explorers.',
-    tags: ['Astro', 'Capacitor', 'Mapbox'],
-    links: [
-      { label: 'Product Page', href: 'https://example.com/echo-trails' },
-    ],
-  },
-];
-
-export const skillCategories = [
-  {
-    title: 'Frontend',
-    items: ['Astro', 'Vue', 'React', 'TypeScript', 'GSAP'],
-  },
-  {
-    title: 'Creative Coding',
-    items: ['WebGL', 'Three.js', 'p5.js', 'Shader Graphs'],
-  },
-  {
-    title: 'Audio Production',
-    items: ['Ableton Live', 'FM Synthesis', 'Mix & Master', 'Sound Design'],
-  },
-  {
-    title: 'Collaboration',
-    items: ['Figma', 'Notion', 'Agile Rituals', 'Client Workshops'],
-  },
-];
-
 export const serviceList = [
   {
-    title: 'Web Experiences',
+    title: 'Ambient Textures & Loops',
+    priceLabel: 'Starting at',
+    price: '$30',
     description:
-      'End-to-end delivery of visually-rich, high-performance web applications tailored to storytelling.',
-    highlights: ['Component systems', 'Responsive design', 'CMS integration'],
+      'Immersive environmental audio for menus, interiors, dream sequences, horror environments, exploration, and subtle background ambience.',
+    features: [
+      'One original ambient texture or atmospheric loop',
+      'Up to 30 seconds',
+      'Seamless looping',
+      'Mixing & mastering',
+      'Commercial-use license for one project',
+      'One revision',
+    ],
+    action: 'Request Ambient Audio',
   },
   {
-    title: 'Audio Branding',
+    title: 'Original Music Composition',
+    priceLabel: 'Starting at',
+    price: '$60',
     description:
-      'Crafting sonic identities, original compositions, and immersive sound design for digital products.',
-    highlights: ['Theme development', 'UI sound kits', 'Spatial audio'],
+      'A fully original composition written around your game’s emotion, gameplay, and artistic direction—never templates or stock music.',
+    features: [
+      'One original composition',
+      'Up to 90 seconds',
+      'Custom instrumentation',
+      'Professional arrangement',
+      'Loop-ready version when needed',
+      'Mixing & mastering',
+      'Commercial-use license for one project',
+      'Two revisions',
+    ],
+    action: 'Commission a Track',
   },
   {
-    title: 'Creative Direction',
+    title: 'Full Game Audio',
+    priceLabel: '',
+    price: 'Custom quote',
     description:
-      'Helping teams explore concepts and translate creative briefs into tangible prototypes and demos.',
-    highlights: ['Design sprints', 'Interactive moodboards', 'Rapid prototyping'],
+      'A complete musical direction and cohesive soundtrack designed to evolve with your world, gameplay, and story.',
+    features: [
+      'Original soundtrack tailored to your game',
+      'As many tracks as the game requires',
+      'Shared themes and recurring motifs',
+      'Consistent artistic direction',
+      'Loop-ready exports',
+      'Mixing & mastering',
+      'Commercial-use license',
+      'Ongoing collaboration throughout development',
+      'Multiple revisions during production',
+    ],
+    action: 'Build My Soundtrack',
+  },
+  {
+    title: 'Custom Audio Solution',
+    priceLabel: '',
+    price: 'Custom quote',
+    description:
+      'A tailored solution for adaptive music, implementation support, custom collections, unusual scopes, or specific budgets.',
+    features: [
+      'Original compositions and ambient textures',
+      'Music packs, stems, and alternate versions',
+      'Adaptive music',
+      'Audio consulting',
+      'Long-term collaboration',
+    ],
+    action: "Let's Talk",
   },
 ];
 
 export const aboutContent = {
   paragraphs: [
-    'I am a multidisciplinary developer and producer focused on crafting experiences where visuals, interaction, and sound flow together.',
-    'Over the last 6 years I have collaborated with studios, artists, and brands to launch interfaces, installations, and shows across Europe and LATAM.',
-    'When I am not in front of a DAW or an editor, you can find me exploring modular synth patches or capturing field recordings in the wild.',
-  ],
-  facts: [
-    { label: 'Based in', value: 'Buenos Aires, AR' },
-    { label: 'Experience', value: '6+ Years' },
-    { label: 'Currently', value: 'Freelance Creative Technologist' },
+    'I am Gonzalo Ames, also known as Aneks, a Peruvian composer and music producer drawn to the way music can give a world its identity.',
+    'My work moves between ambient and cinematic writing, memorable melodic themes, electronic textures, and guitar-led pieces. I compose with story first: every cue should reveal something about a place, a character, or a feeling.',
+    'I am especially interested in music for games and visual media, where a score can grow alongside the experience and stay with the listener after it ends.',
   ],
 };
 
@@ -109,46 +101,53 @@ export const contactEntries = [
   { label: 'Calendly', value: 'Book a call', href: 'https://calendly.com/gonzalootero/intro', external: true },
 ];
 
-export const footerLinks = [
-  { label: 'GitHub', href: 'https://github.com/Aneks1' },
-  // { label: 'SoundCloud', href: 'https://soundcloud.com/gonzalootero' },
-  // { label: 'Dribbble', href: 'https://dribbble.com/gonzalootero' },
-];
-
-export const musicTracks = [
+export const musicAlbums = [
   {
-    id: 'cafe-ost',
-    title: 'Café - Project Fantasy OST',
+    id: 'fantasy-ost',
+    title: 'Fantasy OST',
     artist: 'Gonzalo Ames',
     cover: '/music/cafe.png',
-    src: '/music/cafe.mp3',
+    description: 'Themes and scenes from a colorful fantasy world.',
+    tracks: [
+      {
+        id: 'cafe-ost',
+        title: 'Café',
+        artist: 'Gonzalo Ames',
+        src: '/music/cafe.mp3',
+      },
+      {
+        id: 'arcade',
+        title: 'Arcade',
+        artist: 'Gonzalo Ames',
+        src: '/music/arcade.mp3',
+      },
+      {
+        id: 'boss-sample',
+        title: 'Boss Cutscene',
+        artist: 'Gonzalo Ames',
+        src: '/music/boss-sample.mp3',
+      },
+    ],
   },
   {
-    id: 'arcade',
-    title: 'Arcade - Project Fantasy OST',
+    id: 'experiments',
+    title: 'Experiments',
     artist: 'Gonzalo Ames',
     cover: '/music/arcade.png',
-    src: '/music/arcade.mp3',
-  },
-  {
-    id: 'boss-sample',
-    title: 'Boss Cutscene Sample',
-    artist: 'Gonzalo Ames',
-    cover: '/music/boss-sample.jpg',
-    src: '/music/boss-sample.mp3',
-  },
-  {
-    id: 'fantasy-song',
-    title: 'Fantasy Song Experiment',
-    artist: 'Gonzalo Ames',
-    cover: '/music/fantasy-song.jpg',
-    src: '/music/fantasy-song.mp3',
-  },
-  {
-    id: 'futuristic-shooter',
-    title: 'Futuristic Shooter OST',
-    artist: 'Gonzalo Ames',
-    cover: '/music/futuristic-shooter.jpg',
-    src: '/music/futuristic-shooter.mp3',
+    description: 'Standalone sketches exploring different moods and genres.',
+    tracks: [
+      {
+        id: 'fantasy-song',
+        title: 'Fantasy Song Experiment',
+        artist: 'Gonzalo Ames',
+        src: '/music/fantasy-song.mp3',
+      },
+      {
+        id: 'futuristic-shooter',
+        title: 'Futuristic Shooter OST',
+        artist: 'Gonzalo Ames',
+        src: '/music/futuristic-shooter.mp3',
+      },
+    ],
   },
 ];

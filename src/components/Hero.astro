@@ -14,13 +14,13 @@ const { links = [] } = Astro.props;
       <span class="aka" aria-label="Aneks">Aneks</span>
     </h1>
     <p class="hero-subtitle">
-      A developer building web systems, tools, and bots - and a composer creating original music.
+      A composer creating original music for games, stories, and imagined worlds.
     </p>
     <div class="hero-cta">
-      <a class="cta main" href="#projects">
-        <span class="cta-label">View projects</span>
+      <a class="cta main" href="#music">
+        <span class="cta-label">Listen to my music</span>
       </a>
-      <a class="cta ghost" href="#services">Hire me</a>
+      <a class="cta ghost" href="#contact">Contact me</a>
     </div>
   </div>
 </section>
@@ -100,10 +100,11 @@ const { links = [] } = Astro.props;
 
   .hero-subtitle {
     margin: 0;
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    max-width: 720px;
+    font-size: clamp(1.05rem, 1.8vw, 1.35rem);
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.5);
-    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.48);
+    line-height: 1.5;
   }
 
   .hero-cta {

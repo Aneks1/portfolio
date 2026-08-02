@@ -1,12 +1,22 @@
 ---
 import MusicPlayer from './MusicPlayer.vue';
-import MusicCard from './MusicCard.vue';
+import AlbumCard from './AlbumCard.vue';
 
 const {
   title = 'Music',
   description = '',
-  tracks = [],
+  albums = [],
 } = Astro.props;
+
+const tracks = albums.flatMap((album) =>
+  album.tracks.map((track) => ({
+    ...track,
+    artist: track.artist ?? album.artist,
+    cover: track.cover ?? album.cover,
+    albumId: album.id,
+    albumTitle: album.title,
+  })),
+);
 ---
 
 <section class="section" id="music">
@@ -27,8 +37,8 @@ const {
       </svg>
     </button>
     <div class="music-carousel__viewport" data-carousel-viewport>
-      {tracks.map((track) => (
-        <MusicCard client:load track={track} />
+      {albums.map((album) => (
+        <AlbumCard client:load album={album} />
       ))}
     </div>
     <button
@@ -53,13 +63,6 @@ const {
     padding: 5rem 0;
     position: relative;
     align-items: center;
-    background: radial-gradient(
-      circle 1200px at 50% 30%,
-      rgba(106, 72, 255, 0.1) 0%,
-      rgba(106, 72, 255, 0) 50%
-    );
-    background-repeat: no-repeat;
-    background-position: center top;
   }
 
   .section::before {

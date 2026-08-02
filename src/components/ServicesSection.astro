@@ -1,4 +1,6 @@
 ---
+import checkIcon from '../assets/check2-circle.svg';
+
 const {
   title = 'Services',
   description = '',
@@ -16,13 +18,33 @@ const {
       <article class="service-card">
         <h3>{service.title}</h3>
         <p>{service.description}</p>
-        {service.highlights && (
-          <ul>
-            {service.highlights.map((highlight) => (
-              <li>{highlight}</li>
+        {service.features && (
+          <ul class="service-features">
+            {service.features.map((feature) => (
+              <li>
+                <span
+                  class="check-icon"
+                  style={`--check-icon: url("${checkIcon.src}")`}
+                  aria-hidden="true"
+                ></span>
+                <span>{feature}</span>
+              </li>
             ))}
           </ul>
         )}
+        <div class="service-footer">
+          <a class="service-action" href="#contact">{service.action}</a>
+          <div
+            class:list={{
+              'service-pricing': true,
+              'has-starting-price': Boolean(service.priceLabel),
+            }}
+          >
+            <strong class:list={{ 'custom-quote': service.price === 'Custom quote' }}>
+              {service.price}
+            </strong>
+          </div>
+        </div>
       </article>
     ))}
   </div>
@@ -38,62 +60,160 @@ const {
 
   .section-header {
     max-width: 640px;
+    margin: 0 auto;
   }
 
   h2 {
     margin: 0;
-    font-size: 2rem;
-    color: #f3f2ff;
+    text-align: center;
+    font-size: 3rem;
+    color: #ffffffe0;
   }
 
   .section-header p {
-    margin-top: 0.75rem;
-    color: #cfcbe9;
-    font-size: 1.05rem;
+    color: #ffffff80;
+    text-align: center;
+    font-size: 1.25rem;
   }
 
   .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    width: min(1100px, 100%);
+    margin: 0 auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
   }
 
   .service-card {
-    padding: 1.75rem;
-    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.35rem, 2.2vw, 1.7rem);
+    border-radius: 20px;
     background: rgba(19, 21, 34, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.08);
     color: #ebeafd;
   }
 
   .service-card h3 {
+    width: 100%;
     margin-top: 0;
-    margin-bottom: 0.75rem;
-    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+    background: linear-gradient(to right, var(--main-color-1), var(--main-color-2));
+    background-clip: text;
+    color: transparent;
+    font-size: clamp(1.3rem, 2.2vw, 1.6rem);
+    line-height: 1.2;
   }
 
   .service-card p {
-    margin: 0 0 0.75rem;
+    margin: 0.8rem 0 1rem;
     color: #c3c0de;
+    font-size: 0.94rem;
+    line-height: 1.6;
   }
 
-  ul {
-    margin: 0;
-    padding-left: 1.1rem;
+  .service-features {
+    display: grid;
+    gap: 0.55rem;
+    margin: 0 0 1.25rem;
+    padding: 0;
     color: #d2ceef;
+    list-style: none;
   }
 
-  li + li {
-    margin-top: 0.35rem;
+  .service-features li {
+    display: grid;
+    grid-template-columns: 1.15rem minmax(0, 1fr);
+    align-items: start;
+    gap: 0.65rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .check-icon {
+    display: block;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.1rem;
+    background-color: var(--main-color-1);
+    -webkit-mask: var(--check-icon) center / contain no-repeat;
+    mask: var(--check-icon) center / contain no-repeat;
+  }
+
+  .service-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 2rem;
+  }
+
+  .service-action {
+    padding: 0.65rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    color: #f4f3ff;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  }
+
+  .service-action:hover,
+  .service-action:focus-visible {
+    border-color: rgba(68, 243, 255, 0.55);
+    background: rgba(255, 255, 255, 0.07);
+    transform: translateY(-2px);
+  }
+
+  .service-pricing {
+    position: relative;
+    display: block;
+    flex: 0 0 auto;
+    margin-right: 1rem;
+    text-align: right;
+  }
+
+  .service-pricing.has-starting-price strong::before {
+    content: "Starting at";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 0.3rem);
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.68rem;
+    font-weight: 400;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .service-pricing strong {
+    position: relative;
+    display: inline-block;
+    background: linear-gradient(to right, var(--main-color-1), var(--main-color-2));
+    background-size: 150% 100%;
+    background-clip: text;
+    color: transparent;
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .service-pricing strong.custom-quote {
+    font-size: 1.45rem;
   }
 
   @media (max-width: 640px) {
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+
     h2 {
-      font-size: 1.7rem;
+      font-size: 2.4rem;
     }
 
     .section-header p {
-      font-size: 0.95rem;
+      font-size: 1.05rem;
     }
   }
 </style>
