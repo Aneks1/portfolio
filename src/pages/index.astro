@@ -8,9 +8,14 @@ import Footer from '../components/Footer.astro';
 
 import {
   navLinks,
-  musicAlbums,
   serviceList,
 } from '../data/content';
+import { localMusicRepository } from '../data/music';
+
+// Swap LocalMusicRepository for ApiMusicRepository when the backend is ready.
+// Vue islands receive plain serializable data from either source.
+const musicCatalog = await localMusicRepository.loadCatalog();
+const musicAlbums = musicCatalog.toJSON();
 ---
 
 <Layout>
