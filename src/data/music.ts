@@ -176,6 +176,20 @@ export class ApiMusicRepository extends MusicRepository {
 const musicAsset = (filename: string) => `/music/${filename}`;
 
 export const musicCatalog = new MusicCatalog([
+  new MusicAlbum({
+    id: 'catfishing-ost',
+    title: 'Catfishing OST',
+    artist: 'Gonzalo Ames',
+    cover: musicAsset('catfishing.png'),
+    description: 'OST for Catfishing.',
+    tracks: [
+      new MusicTrack({
+        id: 'glasswater',
+        title: 'Glasswater',
+        src: musicAsset('Glasswater.mp3'),
+      }),
+    ],
+  }),
     new MusicAlbum({
     id: 'undertale',
     title: 'Undertale Orchestral',
