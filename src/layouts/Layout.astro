@@ -1,4 +1,6 @@
 ---
+import Analytics from '@vercel/analytics/astro';
+
 const {
   title = 'Gonzalo Ames | Composer & Music Producer',
   description = 'Original music for games, visual media, and imagined worlds by Peruvian composer Gonzalo Ames.',
@@ -12,13 +14,30 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta name="google-site-verification" content="0mYg8r7bcLD-SFJ90F8ZvRmA1kIbc3QAsaSHiBtub6A" />
+    <link rel="canonical" href="https://aneks1.vercel.app/" />
     <title>{title}</title>
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Gonzalo Ames",
+        url: "https://aneks1.vercel.app/",
+        jobTitle: "Music Producer",
+        sameAs: [
+          "https://github.com/Aneks1",
+          "https://aneks.itch.io/"
+        ]
+      })}
+    />
   </head>
   <body>
     <div class="noise"></div>
     <div class="wrapper">
       <slot />
     </div>
+    <Analytics />
   </body>
 </html>
 
