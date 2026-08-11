@@ -1,0 +1,457 @@
+---
+import starOutline from '../assets/star.svg';
+import starFill from '../assets/star-fill.svg';
+import starHalf from '../assets/star-half.svg';
+---
+
+<main class="review-page">
+  <a class="back-link" href="/" aria-label="Return to portfolio">
+    <span aria-hidden="true">←</span> Portfolio
+  </a>
+
+  <section class="review-card">
+    <header class="review-heading">
+      <span>Share your experience</span>
+      <h1>Leave a Review</h1>
+      <p>Your feedback helps future clients know what it is like to work with me.</p>
+    </header>
+
+    <form class="review-form" data-review-form>
+      <div class="form-grid">
+        <label>
+          <span>Name</span>
+          <input type="text" name="name" autocomplete="name" maxlength="80" required />
+        </label>
+
+        <label>
+          <span>Email / Discord</span>
+          <input
+            type="text"
+            name="contact"
+            maxlength="120"
+            placeholder="Email address or Discord username"
+            required
+          />
+        </label>
+
+        <label>
+          <span>Project name</span>
+          <input type="text" name="projectName" maxlength="100" required />
+        </label>
+
+        <label>
+          <span>Project URL <small>(optional)</small></span>
+          <input type="url" name="projectUrl" maxlength="300" placeholder="https://" />
+        </label>
+      </div>
+
+      <fieldset
+        class="rating-field"
+        style={`--star-outline: url("${starOutline.src}"); --star-fill: url("${starFill.src}"); --star-half: url("${starHalf.src}")`}
+      >
+        <legend>Rating</legend>
+        <div class="rating" aria-label="Rating from half a star to five stars" data-rating-control>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <span class="rating-star" data-rating-star={star} data-state="empty">
+              <input
+                type="radio"
+                id={`rating-${star}-half`}
+                name="rating"
+                value={star - 0.5}
+                required={star === 1}
+              />
+              <label class="rating-hit rating-hit--half" for={`rating-${star}-half`} title={`${star - 0.5} stars`}>
+                <span class="sr-only">{star - 0.5} stars</span>
+              </label>
+              <input type="radio" id={`rating-${star}`} name="rating" value={star} />
+              <label class="rating-hit rating-hit--full" for={`rating-${star}`} title={`${star} ${star === 1 ? 'star' : 'stars'}`}>
+                <span class="sr-only">{star} {star === 1 ? 'star' : 'stars'}</span>
+              </label>
+              <span class="star-icon" aria-hidden="true"></span>
+            </span>
+          ))}
+        </div>
+      </fieldset>
+ 
+      <label>
+        <span>Comment on my work</span>
+        <textarea name="comment" rows="7" maxlength="1000" required></textarea>
+      </label>
+
+      <label class="website-field" aria-hidden="true">
+        <span>Website</span>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" />
+      </label>
+
+      <p class="testimonial-consent">
+        By submitting this review, you give me permission to use your testimonial in my portfolio and promotional materials.
+      </p>
+
+      <div class="form-footer">
+        <p class="form-status" data-review-status aria-live="polite"></p>
+        <button type="submit" data-review-submit><span>Submit Review</span></button>
+      </div>
+    </form>
+  </section>
+</main>
+
+<script>
+  const form = document.querySelector('[data-review-form]');
+
+  if (form instanceof HTMLFormElement) {
+    const status = form.querySelector('[data-review-status]');
+    const submitButton = form.querySelector('[data-review-submit]');
+    const submitLabel = submitButton?.querySelector('span');
+    const ratingControl = form.querySelector('[data-rating-control]');
+
+    if (ratingControl instanceof HTMLElement) {
+      const paintRating = (value: number) => {
+        ratingControl.querySelectorAll('[data-rating-star]').forEach((element) => {
+          if (!(element instanceof HTMLElement)) return;
+          const star = Number(element.dataset.ratingStar);
+          element.dataset.state = value >= star ? 'full' : value === star - 0.5 ? 'half' : 'empty';
+        });
+      };
+
+      ratingControl.querySelectorAll('input[name="rating"]').forEach((input) => {
+        if (!(input instanceof HTMLInputElement)) return;
+        input.addEventListener('change', () => paintRating(Number(input.value)));
+        input.addEventListener('focus', () => paintRating(Number(input.value)));
+      });
+      ratingControl.querySelectorAll('label').forEach((label) => {
+        label.addEventListener('mouseenter', () => {
+          const input = document.getElementById(label.htmlFor);
+          if (input instanceof HTMLInputElement) paintRating(Number(input.value));
+        });
+      });
+      ratingControl.addEventListener('mouseleave', () => {
+        const selected = ratingControl.querySelector('input:checked');
+        paintRating(selected instanceof HTMLInputElement ? Number(selected.value) : 0);
+      });
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!(submitButton instanceof HTMLButtonElement)) return;
+
+      submitButton.disabled = true;
+      if (submitLabel) submitLabel.textContent = 'Sending…';
+      if (status) {
+        status.textContent = '';
+        status.className = 'form-status';
+      }
+
+      try {
+        const response = await fetch('/api/review', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || 'Could not send your review.');
+
+        form.reset();
+        ratingControl?.querySelectorAll('[data-rating-star]').forEach((star) => {
+          if (star instanceof HTMLElement) star.dataset.state = 'empty';
+        });
+        if (status) {
+          status.textContent = 'Thank you! Your review has been sent.';
+          status.classList.add('form-status--success');
+        }
+      } catch (error) {
+        if (status) {
+          status.textContent = error instanceof Error ? error.message : 'Could not send your review.';
+          status.classList.add('form-status--error');
+        }
+      } finally {
+        submitButton.disabled = false;
+        if (submitLabel) submitLabel.textContent = 'Submit Review';
+      }
+    });
+  }
+</script>
+
+<style>
+  .review-page {
+    display: grid;
+    width: min(900px, 100%);
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: clamp(2rem, 6vw, 5rem) 0;
+    align-content: center;
+    gap: 1.25rem;
+  }
+
+  .back-link {
+    justify-self: start;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .back-link:hover,
+  .back-link:focus-visible {
+    color: var(--main-color-2);
+    transform: translateX(-3px);
+  }
+
+  .review-card {
+    position: relative;
+    padding: clamp(1.6rem, 5vw, 3.25rem);
+    border: 2px solid transparent;
+    border-radius: 24px;
+    background-color: rgba(19, 21, 34, 0.9);
+  }
+
+  .review-card::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: -2px;
+    padding: 2px;
+    border-radius: inherit;
+    background: linear-gradient(120deg, var(--main-color-1), var(--main-color-2));
+    pointer-events: none;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+
+  .review-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .review-heading {
+    max-width: 640px;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+  }
+
+  .review-heading > span {
+    color: var(--main-color-2);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .review-heading h1 {
+    margin: 0.3rem 0 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: clamp(2.4rem, 5vw, 3rem);
+  }
+
+  .review-heading p {
+    margin: 0.9rem 0 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.08rem;
+    line-height: 1.6;
+  }
+
+  .review-form {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .testimonial-consent {
+    margin: 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid rgba(245, 197, 66, 0.18);
+    border-radius: 12px;
+    background: rgba(245, 197, 66, 0.055);
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.82rem;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem;
+  }
+
+  label {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  label > span,
+  legend {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  label small {
+    color: rgba(255, 255, 255, 0.38);
+    font: inherit;
+    font-weight: 400;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    outline: none;
+    background: rgba(34, 36, 58, 0.72);
+    color: #f4f3ff;
+    font: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  input {
+    min-height: 48px;
+    padding: 0 0.9rem;
+  }
+
+  textarea {
+    min-height: 170px;
+    padding: 0.9rem;
+    resize: vertical;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: rgba(68, 243, 255, 0.55);
+    box-shadow: 0 0 0 3px rgba(68, 243, 255, 0.08);
+  }
+
+  input::placeholder {
+    color: rgba(255, 255, 255, 0.32);
+  }
+
+  .rating-field {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .rating-field legend {
+    margin-bottom: 0.55rem;
+  }
+
+  .rating {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.4rem;
+  }
+
+  .rating input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .rating-star {
+    position: relative;
+    display: block;
+    width: 38px;
+    height: 38px;
+  }
+
+  .rating-hit {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    cursor: pointer;
+  }
+
+  .rating-hit--half { left: 0; width: 50%; }
+  .rating-hit--full { inset-inline: 0; z-index: 1; }
+
+  .star-icon {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.42);
+    -webkit-mask: var(--star-outline) center / contain no-repeat;
+    mask: var(--star-outline) center / contain no-repeat;
+    transition: background-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .rating-star[data-state="full"] .star-icon {
+    background-color: #f5c542;
+    -webkit-mask-image: var(--star-fill);
+    mask-image: var(--star-fill);
+    transform: translateY(-2px);
+  }
+
+  .rating-star[data-state="half"] .star-icon {
+    background-color: #f5c542;
+    -webkit-mask-image: var(--star-half);
+    mask-image: var(--star-half);
+    transform: translateY(-2px);
+  }
+
+  .rating input:focus-visible + label {
+    border-radius: 8px;
+    outline: 2px solid var(--main-color-2);
+    outline-offset: 2px;
+  }
+
+  .website-field,
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .form-footer {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .form-status {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.88rem;
+  }
+
+  .form-status--success { color: var(--main-color-2); }
+  .form-status--error { color: #ff8f9d; }
+
+  .form-footer button {
+    min-width: 155px;
+    padding: 0.85rem 1.6rem;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(to right, var(--main-color-1), var(--main-color-2));
+    color: #09090f;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .form-footer button:hover:not(:disabled),
+  .form-footer button:focus-visible:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  .form-footer button:disabled {
+    cursor: wait;
+    opacity: 0.6;
+  }
+
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-footer { align-items: stretch; flex-direction: column; }
+  }
+</style>

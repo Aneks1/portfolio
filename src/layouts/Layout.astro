@@ -4,6 +4,7 @@ import Analytics from '@vercel/analytics/astro';
 const {
   title = 'Gonzalo Ames | Composer & Music Producer',
   description = 'Original music for games, visual media, and imagined worlds by Peruvian composer Gonzalo Ames.',
+  canonical = 'https://aneks1.vercel.app/',
 } = Astro.props;
 ---
 <!doctype html>
@@ -15,7 +16,7 @@ const {
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta name="google-site-verification" content="0mYg8r7bcLD-SFJ90F8ZvRmA1kIbc3QAsaSHiBtub6A" />
-    <link rel="canonical" href="https://aneks1.vercel.app/" />
+    <link rel="canonical" href={canonical} />
     <title>{title}</title>
     <script
       type="application/ld+json"
