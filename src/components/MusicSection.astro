@@ -60,21 +60,9 @@ const tracks = albums.flatMap((album) =>
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    padding: 5rem 0;
+    padding: 2.5rem 0 5rem;
     position: relative;
     align-items: center;
-  }
-
-  .section::before {
-    content: "";
-    width: 90%;
-    height: 2px;
-    position: absolute;
-    background: linear-gradient(to right, transparent, var(--main-color-1), var(--main-color-2), transparent);
-    top: 0;
-    left: 50%;
-    translate: -50% 0;
-    opacity: 65%;
   }
 
   .section-header {

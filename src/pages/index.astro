@@ -1,13 +1,16 @@
 ﻿---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
+import ParticleBackdrop from '../components/ParticleBackdrop.astro';
 import MusicSection from '../components/MusicSection.astro';
 import ServicesSection from '../components/ServicesSection.astro';
+import ReviewsSection from '../components/ReviewsSection.astro';
 import ContactSection from '../components/ContactSection.astro';
 import Footer from '../components/Footer.astro';
 
 import {
   navLinks,
+  reviewList,
   serviceList,
 } from '../data/content';
 import { localMusicRepository } from '../data/music';
@@ -21,6 +24,8 @@ const musicAlbums = musicCatalog.toJSON();
 <Layout>
   <main class="page">
     <Hero links={navLinks} />
+    <ParticleBackdrop />
+    <ReviewsSection reviews={reviewList} />
     <MusicSection
       title="Selected Music"
       description="Original themes, cinematic cues, and experiments written for games and imagined worlds. Select an album to listen."
@@ -38,6 +43,8 @@ const musicAlbums = musicCatalog.toJSON();
 
 <style>
   .page {
+    position: relative;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
     gap: 2rem;

@@ -2,6 +2,7 @@ export const navLinks = [
   { label: 'Home', href: '#home' },
   { label: 'Music', href: '#music' },
   { label: 'Services', href: '#services' },
+  { label: 'Reviews', href: '#reviews' },
   { label: 'Contact', href: '#contact' },
 ];
 
@@ -83,6 +84,18 @@ export const serviceList = [
       'Long-term collaboration',
     ],
     action: "Let's Talk",
+  },
+];
+
+export const reviewList = [
+  {
+    client: 'Async',
+    contact: 'scriptedasync',
+    project: 'My PC Store',
+    role: 'Developer',
+    projectUrl: '',
+    rating: 5,
+    comment: 'Amazing for its price 10/10',
   },
 ];
 

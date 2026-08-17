@@ -1,0 +1,238 @@
+---
+import starOutline from '../assets/star.svg';
+import starFill from '../assets/star-fill.svg';
+import starHalf from '../assets/star-half.svg';
+
+interface Review {
+  client: string;
+  contact?: string;
+  project: string;
+  role?: string;
+  projectUrl?: string;
+  rating: number;
+  comment: string;
+}
+
+interface Props {
+  reviews?: Review[];
+}
+
+const { reviews = [] } = Astro.props;
+
+const starState = (rating: number, star: number) => {
+  if (rating >= star) return 'full';
+  if (rating >= star - 0.5) return 'half';
+  return 'empty';
+};
+---
+
+<section class="reviews-section" id="reviews">
+  <div class="reviews-viewport">
+    <div class="reviews-track">
+      {reviews.map((review) => (
+        <article class="review-card">
+          <div class="review-topline">
+            <div
+              class="review-rating"
+              aria-label={`${review.rating} out of 5 stars`}
+              style={`--star-outline: url("${starOutline.src}"); --star-fill: url("${starFill.src}"); --star-half: url("${starHalf.src}")`}
+            >
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span class:list={['review-star', `is-${starState(review.rating, star)}`]} aria-hidden="true"></span>
+              ))}
+            </div>
+            <span class="rating-number">{review.rating}/5</span>
+          </div>
+
+          <blockquote>“{review.comment}”</blockquote>
+
+          <footer class="review-footer">
+            <div class="client-mark" aria-hidden="true">{review.client.charAt(0).toUpperCase()}</div>
+            <div>
+              <strong>
+                {review.client}
+                {review.contact && <small> ({review.contact})</small>}
+              </strong>
+              {review.projectUrl ? (
+                <a href={review.projectUrl} target="_blank" rel="noopener noreferrer">
+                  {review.project}{review.role && <small> · {review.role}</small>}
+                </a>
+              ) : (
+                <span>{review.project}{review.role && <small> · {review.role}</small>}</span>
+              )}
+            </div>
+          </footer>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .reviews-section {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    margin-top: -2rem;
+    padding: 3rem 0 0;
+    overflow: hidden;
+  }
+
+  .reviews-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 90%;
+    height: 2px;
+    translate: -50% 0;
+    background: linear-gradient(to right, transparent, var(--main-color-1), var(--main-color-2), transparent);
+    opacity: 0.65;
+    z-index: 2;
+  }
+
+  .reviews-viewport {
+    position: relative;
+    z-index: 1;
+    width: min(1100px, 100%);
+    margin: 0 auto;
+  }
+
+  .reviews-track {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .review-card {
+    position: relative;
+    display: flex;
+    width: min(340px, 100%);
+    min-height: 180px;
+    flex: 0 0 min(340px, 100%);
+    flex-direction: column;
+    padding: 1.15rem 1.25rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    background: rgba(19, 21, 34, 0.5);
+    color: #ebeafd;
+  }
+
+  .review-card::after {
+    content: '“';
+    position: absolute;
+    top: -1.4rem;
+    right: 1.2rem;
+    color: rgba(148, 47, 255, 0.1);
+    font-family: Georgia, serif;
+    font-size: 10rem;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .review-topline {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .review-rating {
+    display: flex;
+    gap: 0.22rem;
+  }
+
+  .review-star {
+    width: 1.15rem;
+    height: 1.15rem;
+    background: rgba(255, 255, 255, 0.3);
+    -webkit-mask: var(--star-outline) center / contain no-repeat;
+    mask: var(--star-outline) center / contain no-repeat;
+  }
+
+  .review-star.is-full,
+  .review-star.is-half {
+    background: #f5c542;
+  }
+
+  .review-star.is-full {
+    -webkit-mask-image: var(--star-fill);
+    mask-image: var(--star-fill);
+  }
+
+  .review-star.is-half {
+    -webkit-mask-image: var(--star-half);
+    mask-image: var(--star-half);
+  }
+
+  .rating-number {
+    color: rgba(255, 255, 255, 0.48);
+    font-size: 0.82rem;
+  }
+
+  blockquote {
+    position: relative;
+    z-index: 1;
+    margin: 1rem 0;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .review-footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: auto;
+  }
+
+  .client-mark {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--main-color-1), var(--main-color-2));
+    color: #09090f;
+    font-weight: 800;
+  }
+
+  .review-footer > div:last-child {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .review-footer strong {
+    color: #f4f3ff;
+    font-size: 0.95rem;
+  }
+
+  .review-footer small {
+    color: rgba(255, 255, 255, 0.46);
+    font: inherit;
+    font-weight: 400;
+  }
+
+  .review-footer span,
+  .review-footer a {
+    color: rgba(255, 255, 255, 0.48);
+    font-size: 0.82rem;
+    text-decoration: none;
+  }
+
+  .review-footer a:hover,
+  .review-footer a:focus-visible {
+    color: var(--main-color-2);
+  }
+
+  @media (max-width: 640px) {
+    .reviews-section { padding-top: 2rem; }
+    .review-card { min-height: 180px; }
+  }
+</style>

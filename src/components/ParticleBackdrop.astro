@@ -1,0 +1,109 @@
+<div class="particle-backdrop" data-particle-backdrop aria-hidden="true">
+  <span class="particle-origin-glow"></span>
+  <canvas data-page-particles></canvas>
+</div>
+
+<script>
+  import { FadePlugin, HEX, ParticleSystem, range } from 'particulab';
+
+  const backdrop = document.querySelector('[data-particle-backdrop]');
+  const canvas = document.querySelector('[data-page-particles]');
+
+  if (
+    backdrop instanceof HTMLElement
+    && canvas instanceof HTMLCanvasElement
+    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    const page = backdrop.closest('.page');
+    const particleOrigin = page?.querySelector('#reviews');
+    let system: ParticleSystem | undefined;
+    let resizeTimer: number | undefined;
+
+    const startParticles = () => {
+      if (!(page instanceof HTMLElement) || !(particleOrigin instanceof HTMLElement)) return;
+
+      system?.stop();
+      system?.clear();
+
+      const originY = particleOrigin.offsetTop;
+      const canvasHeight = Math.max(window.innerHeight * 1.5, page.scrollHeight - originY);
+      const canvasWidth = page.getBoundingClientRect().width * 0.8;
+      backdrop.style.top = `${originY}px`;
+      backdrop.style.height = `${canvasHeight}px`;
+      backdrop.dataset.ready = 'true';
+
+      system = new ParticleSystem(canvas, {
+        canvasSize: { x: Math.max(1, Math.round(canvasWidth)), y: Math.max(1, Math.round(canvasHeight)) },
+        amount: Math.max(24, Math.round((canvasWidth / 55) * 1.5)),
+        lifeSpan: range(7, 13),
+        size: range(2, 6),
+        velocity: { x: range(-5, 5), y: range(-52, -36) },
+        acceleration: { x: range(0, 0), y: range(-1, 0) },
+        colors: [new HEX('942fff'), new HEX('b267ff'), new HEX('7d1fe0'), new HEX('c9a0ff')],
+        opacity: range(24, 58),
+        shapes: ['circle'],
+      });
+
+      system.installPlugin(new FadePlugin({
+        fadeIn: { duration: 1.5, opacity: 0 },
+        fadeOut: { duration: 2.5, opacity: 0 },
+      }));
+
+      system.onParticleCreate((particle) => {
+        particle.position.x = Math.random() * canvasWidth;
+        particle.position.y = 0;
+      });
+      system.init();
+    };
+
+    startParticles();
+    window.addEventListener('load', startParticles, { once: true });
+    window.addEventListener('resize', () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(startParticles, 150);
+    }, { passive: true });
+  }
+</script>
+
+<style>
+  .particle-backdrop {
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    width: 80%;
+    min-height: 150vh;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%);
+  }
+
+  .particle-backdrop[data-ready='true'] {
+    opacity: 1;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .particle-origin-glow {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 50%;
+    width: clamp(520px, 65vw, 1050px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(88, 96, 210, 0.14) 0%,
+      rgba(88, 96, 210, 0.075) 38%,
+      rgba(88, 96, 210, 0.025) 58%,
+      transparent 74%
+    );
+    filter: blur(34px);
+    transform: translate(-50%, -50%);
+  }
+</style>
