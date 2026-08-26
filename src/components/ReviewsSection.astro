@@ -5,6 +5,7 @@ import starHalf from '../assets/star-half.svg';
 
 interface Review {
   client: string;
+  clientUrl?: string;
   contact?: string;
   project: string;
   role?: string;
@@ -50,13 +51,20 @@ const starState = (rating: number, star: number) => {
             <div class="client-mark" aria-hidden="true">{review.client.charAt(0).toUpperCase()}</div>
             <div>
               <strong>
-                {review.client}
+                {review.clientUrl ? (
+                  <a class="client-link" href={review.clientUrl} target="_blank" rel="noopener noreferrer">
+                    {review.client}
+                  </a>
+                ) : review.client}
                 {review.contact && <small> ({review.contact})</small>}
               </strong>
               {review.projectUrl ? (
-                <a href={review.projectUrl} target="_blank" rel="noopener noreferrer">
-                  {review.project}{review.role && <small> · {review.role}</small>}
-                </a>
+                <span class="project-details">
+                  <a class="project-link" href={review.projectUrl} target="_blank" rel="noopener noreferrer">
+                    {review.project}
+                  </a>
+                  {review.role && <small> · {review.role}</small>}
+                </span>
               ) : (
                 <span>{review.project}{review.role && <small> · {review.role}</small>}</span>
               )}
@@ -213,6 +221,10 @@ const starState = (rating: number, star: number) => {
     font-size: 0.95rem;
   }
 
+  .review-footer .project-details {
+    display: inline;
+  }
+
   .review-footer small {
     color: rgba(255, 255, 255, 0.46);
     font: inherit;
@@ -229,6 +241,25 @@ const starState = (rating: number, star: number) => {
   .review-footer a:hover,
   .review-footer a:focus-visible {
     color: var(--main-color-2);
+  }
+
+  .review-footer a.client-link,
+  .review-footer a.project-link {
+    color: inherit;
+    font-size: inherit;
+    text-decoration-line: underline;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+  }
+
+  .review-footer a.client-link:hover,
+  .review-footer a.client-link:focus-visible,
+  .review-footer a.project-link:hover,
+  .review-footer a.project-link:focus-visible {
+    color: var(--main-color-2);
+    text-decoration-color: currentColor;
   }
 
   @media (max-width: 640px) {

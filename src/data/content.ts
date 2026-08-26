@@ -97,6 +97,17 @@ export const reviewList = [
     rating: 5,
     comment: 'Amazing for its price 10/10',
   },
+  {
+    client: 'Manisha',
+    clientUrl: 'https://www.youtube.com/channel/UCnwPMw74a4wXBTw5RwB3RZQ',
+    contact: 'midnightmist',
+    project: 'Let Your Hair Down',
+    role: 'Developer',
+    projectUrl: 'https://wannibemanisha.itch.io/let-your-hair-down',
+    rating: 5,
+    comment:
+      'Very friendly and easy to work with! Aneks has an ear for making music that perfectly fits the vibe and pace of the gameplay. Had a great time jamming with them and I am looking forward to working with them again!',
+  },
 ];
 
 export const aboutContent = {

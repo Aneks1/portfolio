@@ -177,6 +177,25 @@ const musicAsset = (filename: string) => `/music/${filename}`;
 
 export const musicCatalog = new MusicCatalog([
   new MusicAlbum({
+    id: 'let-down-your-hair',
+    title: 'Let down your hair!',
+    artist: 'Gonzalo Ames',
+    cover: musicAsset('hair.png'),
+    description: 'Original soundtrack for Let Your Hair Down.',
+    tracks: [
+      new MusicTrack({
+        id: 'hair-title-screen',
+        title: 'Title Screen',
+        src: musicAsset('hair-title-screen.mp3'),
+      }),
+      new MusicTrack({
+        id: 'hair-ambient',
+        title: 'Ambient',
+        src: musicAsset('hair-ambient.mp3'),
+      }),
+    ],
+  }),
+  new MusicAlbum({
     id: 'catfishing-ost',
     title: 'Catfishing OST',
     artist: 'Gonzalo Ames',
