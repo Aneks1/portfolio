@@ -177,6 +177,20 @@ const musicAsset = (project: string, filename: string) => `/music/${project}/${f
 
 export const musicCatalog = new MusicCatalog([
   new MusicAlbum({
+    id: 'my-pc-store',
+    title: 'My PC Store OST',
+    artist: 'Gonzalo Ames',
+    cover: musicAsset('my-pc-store', 'my-pc-store.webp'),
+    description: 'Original soundtrack for My PC Store.',
+    tracks: [
+      new MusicTrack({
+        id: 'my-pc-store-background',
+        title: 'Background',
+        src: musicAsset('my-pc-store', 'background.mp3'),
+      }),
+    ],
+  }),
+  new MusicAlbum({
     id: 'turning-lie',
     title: 'Turning Lie OST',
     artist: 'Gonzalo Ames',

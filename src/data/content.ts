@@ -93,7 +93,7 @@ export const reviewList = [
     contact: 'scriptedasync',
     project: 'My PC Store',
     role: 'Developer',
-    projectUrl: '',
+    projectUrl: 'https://www.roblox.com/games/124383051659240/My-PC-Store',
     rating: 5,
     comment: 'Amazing for its price 10/10',
   },
