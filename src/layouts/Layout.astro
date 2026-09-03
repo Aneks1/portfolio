@@ -5,6 +5,7 @@ const {
   title = 'Gonzalo Ames | Composer & Music Producer',
   description = 'Original music for games, visual media, and imagined worlds by Peruvian composer Gonzalo Ames.',
   canonical = 'https://aneks1.vercel.app/',
+  socialImage = 'https://aneks1.vercel.app/img/Thumbnail.png',
 } = Astro.props;
 ---
 <!doctype html>
@@ -15,6 +16,21 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Gonzalo Ames" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1672" />
+    <meta property="og:image:height" content="941" />
+    <meta property="og:image:alt" content="Gonzalo Ames — Composer and Music Producer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content="Gonzalo Ames — Composer and Music Producer" />
     <meta name="google-site-verification" content="0mYg8r7bcLD-SFJ90F8ZvRmA1kIbc3QAsaSHiBtub6A" />
     <link rel="canonical" href={canonical} />
     <title>{title}</title>
