@@ -173,25 +173,49 @@ export class ApiMusicRepository extends MusicRepository {
 
 // Local asset helper. Replace these paths with API/cloud URLs without changing
 // AlbumCard, MusicSection, or MusicPlayer.
-const musicAsset = (filename: string) => `/music/${filename}`;
+const musicAsset = (project: string, filename: string) => `/music/${project}/${filename}`;
 
 export const musicCatalog = new MusicCatalog([
   new MusicAlbum({
-    id: 'let-down-your-hair',
-    title: 'Let down your hair!',
+    id: 'turning-lie',
+    title: 'Turning Lie OST',
     artist: 'Gonzalo Ames',
-    cover: musicAsset('hair.png'),
+    cover: musicAsset('turning-lie', 'Turning-Lie.png'),
+    description: 'Original soundtrack for Turning Lie.',
+    tracks: [
+      new MusicTrack({
+        id: 'turning-lie-investigation',
+        title: 'Investigation',
+        src: musicAsset('turning-lie', 'Investigation.mp3'),
+      }),
+      new MusicTrack({
+        id: 'turning-lie-interrogation',
+        title: 'Interrogation',
+        src: musicAsset('turning-lie', 'Interrogation.mp3'),
+      }),
+      new MusicTrack({
+        id: 'turning-lie-cornering',
+        title: 'Cornering',
+        src: musicAsset('turning-lie', 'Cornering.mp3'),
+      }),
+    ],
+  }),
+  new MusicAlbum({
+    id: 'let-down-your-hair',
+    title: 'Let down your hair! OST',
+    artist: 'Gonzalo Ames',
+    cover: musicAsset('let-down-your-hair', 'hair.png'),
     description: 'Original soundtrack for Let Your Hair Down.',
     tracks: [
       new MusicTrack({
         id: 'hair-title-screen',
         title: 'Title Screen',
-        src: musicAsset('hair-title-screen.mp3'),
+        src: musicAsset('let-down-your-hair', 'hair-title-screen.mp3'),
       }),
       new MusicTrack({
         id: 'hair-ambient',
         title: 'Ambient',
-        src: musicAsset('hair-ambient.mp3'),
+        src: musicAsset('let-down-your-hair', 'hair-ambient.mp3'),
       }),
     ],
   }),
@@ -199,13 +223,13 @@ export const musicCatalog = new MusicCatalog([
     id: 'catfishing-ost',
     title: 'Catfishing OST',
     artist: 'Gonzalo Ames',
-    cover: musicAsset('catfishing.png'),
+    cover: musicAsset('catfishing', 'catfishing.png'),
     description: 'OST for Catfishing.',
     tracks: [
       new MusicTrack({
         id: 'glasswater',
         title: 'Glasswater',
-        src: musicAsset('Glasswater.mp3'),
+        src: musicAsset('catfishing', 'Glasswater.mp3'),
       }),
     ],
   }),
@@ -213,13 +237,13 @@ export const musicCatalog = new MusicCatalog([
     id: 'undertale',
     title: 'Undertale Orchestral',
     artist: 'Gonzalo Ames',
-    cover: musicAsset('undertale-orchestral.png'),
+    cover: musicAsset('undertale-orchestral', 'undertale-orchestral.png'),
     description: 'Orchestral version of the Undertale OST.',
     tracks: [
       new MusicTrack({
         id: 'once-upon-a-time',
         title: 'Once Upon a Time',
-        src: musicAsset('once-upon-a-time.wav'),
+        src: musicAsset('undertale-orchestral', 'once-upon-a-time.wav'),
       })
     ],
   }),
@@ -227,23 +251,23 @@ export const musicCatalog = new MusicCatalog([
     id: 'rain-ost',
     title: 'The Rain, The River OST',
     artist: 'Gonzalo Ames',
-    cover: musicAsset('the-rain-the-river.png'),
+    cover: musicAsset('the-rain-the-river', 'the-rain-the-river.png'),
     description: 'Themes and scenes from a colorful fantasy world.',
     tracks: [
       new MusicTrack({
         id: 'tlalocan',
         title: 'Tlalocan',
-        src: musicAsset('Tlalocan.mp3'),
+        src: musicAsset('the-rain-the-river', 'Tlalocan.mp3'),
       }),
       new MusicTrack({
         id: 'teotihuacan',
         title: 'Teotihuacan',
-        src: musicAsset('Teotihuacan.mp3'),
+        src: musicAsset('the-rain-the-river', 'Teotihuacan.mp3'),
       }),
       new MusicTrack({
         id: 'village',
         title: 'Village',
-        src: musicAsset('Village.mp3'),
+        src: musicAsset('the-rain-the-river', 'Village.mp3'),
       }),
     ],
   }),
