@@ -179,15 +179,16 @@ const { links = [] } = Astro.props;
 
   @media (max-width: 700px) {
     .hero {
-      min-height: auto;
+      min-height: 96svh;
       padding-top: clamp(5rem, 18vw, 7rem);
       padding-bottom: clamp(2.5rem, 10vw, 4rem);
-      gap: 1.5rem;
+      gap: clamp(3rem, 8vh, 4.5rem);
     }
 
     .hero-inner {
       align-items: center;
       text-align: center;
+      gap: clamp(2rem, 5vw, 2.4rem);
     }
 
     .hero-title {
@@ -208,6 +209,7 @@ const { links = [] } = Astro.props;
     .hero-cta {
       justify-content: center;
       width: 100%;
+      gap: 1.35rem;
     }
 
     .cta {

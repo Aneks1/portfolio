@@ -30,8 +30,10 @@ const starState = (rating: number, star: number) => {
 <section class="reviews-section" id="reviews">
   <div class="reviews-viewport">
     <div class="reviews-track">
-      {reviews.map((review) => (
-        <article class="review-card">
+      {[false, true].map((duplicate) => (
+        <div class="reviews-group" aria-hidden={duplicate ? 'true' : undefined}>
+          {reviews.map((review) => (
+            <article class="review-card">
           <div class="review-topline">
             <div
               class="review-rating"
@@ -52,7 +54,7 @@ const starState = (rating: number, star: number) => {
             <div>
               <strong>
                 {review.clientUrl ? (
-                  <a class="client-link" href={review.clientUrl} target="_blank" rel="noopener noreferrer">
+                  <a class="client-link" href={review.clientUrl} target="_blank" rel="noopener noreferrer" tabindex={duplicate ? -1 : undefined}>
                     {review.client}
                   </a>
                 ) : review.client}
@@ -60,7 +62,7 @@ const starState = (rating: number, star: number) => {
               </strong>
               {review.projectUrl ? (
                 <span class="project-details">
-                  <a class="project-link" href={review.projectUrl} target="_blank" rel="noopener noreferrer">
+                  <a class="project-link" href={review.projectUrl} target="_blank" rel="noopener noreferrer" tabindex={duplicate ? -1 : undefined}>
                     {review.project}
                   </a>
                   {review.role && <small> · {review.role}</small>}
@@ -70,11 +72,40 @@ const starState = (rating: number, star: number) => {
               )}
             </div>
           </footer>
-        </article>
+            </article>
+          ))}
+        </div>
       ))}
     </div>
   </div>
 </section>
+
+<script>
+  const reviewViewports = document.querySelectorAll('.reviews-viewport');
+
+  reviewViewports.forEach((viewport) => {
+    if (!(viewport instanceof HTMLElement)) return;
+
+    const track = viewport.querySelector('.reviews-track');
+    const originalGroup = viewport.querySelector('.reviews-group');
+    if (!(track instanceof HTMLElement) || !(originalGroup instanceof HTMLElement)) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const updateCarousel = () => {
+      const overflowing = originalGroup.scrollWidth > viewport.clientWidth + 1;
+      viewport.classList.toggle('is-overflowing', overflowing);
+      viewport.classList.toggle('is-scrolling', overflowing && !reducedMotion.matches);
+      track.style.setProperty('--review-scroll-duration', `${Math.max(16, originalGroup.scrollWidth / 28)}s`);
+    };
+
+    const observer = new ResizeObserver(updateCarousel);
+    observer.observe(viewport);
+    observer.observe(originalGroup);
+    reducedMotion.addEventListener('change', updateCarousel);
+    updateCarousel();
+  });
+</script>
 
 <style>
   .reviews-section {
@@ -111,6 +142,41 @@ const starState = (rating: number, star: number) => {
     display: flex;
     justify-content: center;
     gap: 1.5rem;
+  }
+
+  .reviews-group {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 1.5rem;
+  }
+
+  .reviews-group[aria-hidden='true'] {
+    display: none;
+  }
+
+  .reviews-viewport.is-overflowing {
+    overflow: hidden;
+  }
+
+  .reviews-viewport.is-scrolling .reviews-track {
+    width: max-content;
+    justify-content: flex-start;
+    animation: reviews-scroll var(--review-scroll-duration) linear infinite;
+  }
+
+  .reviews-viewport.is-scrolling .reviews-group[aria-hidden='true'] {
+    display: flex;
+  }
+
+  .reviews-viewport.is-scrolling:hover .reviews-track,
+  .reviews-viewport.is-scrolling:focus-within .reviews-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes reviews-scroll {
+    to {
+      transform: translate3d(calc(-50% - 0.75rem), 0, 0);
+    }
   }
 
   .review-card {
@@ -264,6 +330,22 @@ const starState = (rating: number, star: number) => {
 
   @media (max-width: 640px) {
     .reviews-section { padding-top: 2rem; }
-    .review-card { min-height: 180px; }
+    .review-card {
+      width: min(290px, calc(100vw - 4rem));
+      min-height: 165px;
+      flex-basis: min(290px, calc(100vw - 4rem));
+      padding: 1rem 1.05rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reviews-viewport.is-overflowing {
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .reviews-viewport.is-overflowing::-webkit-scrollbar {
+      display: none;
+    }
   }
 </style>
