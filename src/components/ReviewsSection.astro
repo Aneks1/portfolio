@@ -93,17 +93,26 @@ const starState = (rating: number, star: number) => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     const updateCarousel = () => {
-      const overflowing = originalGroup.scrollWidth > viewport.clientWidth + 1;
+      const cards = Array.from(originalGroup.querySelectorAll('.review-card'));
+      const groupStyles = window.getComputedStyle(originalGroup);
+      const gap = Number.parseFloat(groupStyles.columnGap || groupStyles.gap) || 0;
+      const cardsWidth = cards.reduce(
+        (total, card) => total + card.getBoundingClientRect().width,
+        0,
+      );
+      const contentWidth = cardsWidth + Math.max(0, cards.length - 1) * gap;
+      const overflowing = contentWidth > viewport.getBoundingClientRect().width + 1;
+
       viewport.classList.toggle('is-overflowing', overflowing);
       viewport.classList.toggle('is-scrolling', overflowing && !reducedMotion.matches);
-      track.style.setProperty('--review-scroll-duration', `${Math.max(16, originalGroup.scrollWidth / 28)}s`);
+      track.style.setProperty('--review-scroll-duration', `${Math.max(16, contentWidth / 28)}s`);
     };
 
     const observer = new ResizeObserver(updateCarousel);
     observer.observe(viewport);
     observer.observe(originalGroup);
     reducedMotion.addEventListener('change', updateCarousel);
-    updateCarousel();
+    window.requestAnimationFrame(updateCarousel);
   });
 </script>
 
@@ -142,6 +151,8 @@ const starState = (rating: number, star: number) => {
     display: flex;
     justify-content: center;
     gap: 1.5rem;
+    animation: none;
+    transform: none;
   }
 
   .reviews-group {
